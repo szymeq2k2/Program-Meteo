@@ -2,21 +2,23 @@ import sqlite3
 from sqlite3 import Error as e
 
 
-
+#creates connection
 def connect():
     conn = sqlite3.connect('Data/data_meteo.db')
     return conn
 
+# creates cursor
 def create_cursor(conn):
     c = conn.cursor()
     return c
 
+# closes and saves connection
 def commit_and_close(conn):
     conn.commit()
     conn.close()
     
 
-
+# add_Data saves passed data into weather table
 def add_Data(data):
     conn = connect()
     c = create_cursor(conn)
@@ -27,12 +29,12 @@ def add_Data(data):
 
 
 
-    
+#create_table creates table weather
 def create_table(conn):
     c = create_cursor(conn)
     c.execute('''CREATE TABLE weather(date text, temp real, temp_avg real , temp_min real, temp_max real , humidity real , wind_speed real)''')
 
-
+#max_min_avg returns value min and max temperature from the row with the passed date and avg of all data temperature collected
 def max_min_avg(date):
     min=""
     max=""
