@@ -10,7 +10,8 @@ import dash_core_components as dcc
 import numpy as np
 import re
 import dash
-
+from SQLite import max_min_avg
+from SQLite import add_Data
 def forecastData():
     request_for = requests.get("http://api.openweathermap.org/data/2.5/forecast?lat=50.040003&lon=18.394399&APPID=7cf51f9cd2de7b8e469a6e0ea1bf986c&units=metric")
     for_weather = request_for.content.strip()
@@ -24,7 +25,7 @@ def currentData():
     return data
 
 
-def creating_dash_board():
+def creating_dash_board(json_data,json_data_for):
     external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
     app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
 
@@ -112,12 +113,35 @@ def creating_dash_board():
     ])
     return app
 
+
+def start():
+    end=False
+    print('In order to see all commands input "help"')
+    while end == False:
+        choice = input()
+        if choice == "help":
+            print("\n"+"help - displays all commends."+"\n"+"temp - display min max temperature from selected day and avg temp from all data"+"\n"+"add - adds data from today to database"+"\n"+"show - shows data on diagrams "+"\n"+"quit - closes the aplication"+"\n")
+        elif choice == "temp":
+            print("Input date like this 2020-07-21")
+            date = input()
+            max_min_avg(date)
+        elif choice == "add":
+            add_Data(weatherNow)
+        elif choice == "show":
+            if __name__ == '__main__':
+                webbrowser.open('http://127.0.0.1:8050/')
+                app.run_server()
+        elif choice == "quit":
+            end=True
+
+x = datetime.date.today()
 json_data = currentData()
 json_data_for = forecastData()
+avg =(json_data['main']['temp_min']+json_data['main']['temp_max'])/2
+app=creating_dash_board(json_data,json_data_for)
+weatherNow =[(str(x),json_data['main']['temp'],avg,json_data['main']['temp_min'],json_data['main']['temp_max'],json_data['main']['humidity'],json_data['wind']['speed'])]
 
-
-
-
+start()
 
 
 
