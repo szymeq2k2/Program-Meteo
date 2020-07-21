@@ -12,6 +12,8 @@ import re
 import dash
 from SQLite import max_min_avg
 from SQLite import add_Data
+
+
 def forecastData():
     request_for = requests.get("http://api.openweathermap.org/data/2.5/forecast?lat=50.040003&lon=18.394399&APPID=7cf51f9cd2de7b8e469a6e0ea1bf986c&units=metric")
     for_weather = request_for.content.strip()
@@ -120,7 +122,7 @@ def start():
     while end == False:
         choice = input()
         if choice == "help":
-            print("\n"+"help - displays all commends."+"\n"+"temp - display min max temperature from selected day and avg temp from all data"+"\n"+"add - adds data from today to database"+"\n"+"show - shows data on diagrams "+"\n"+"quit - closes the aplication"+"\n")
+            print("\n"+"help - displays all commands."+"\n"+"temp - display min max temperature from selected day and avg temp from all data"+"\n"+"add - adds data from today to database"+"\n"+"show - shows data on diagrams "+"\n"+"quit - closes the aplication"+"\n")
         elif choice == "temp":
             print("Input date like this 2020-07-21")
             date = input()
