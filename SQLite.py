@@ -20,6 +20,7 @@ def commit_and_close(conn):
 def add_Data(data):
     conn = connect()
     c = create_cursor(conn)
+    create_table(conn)
     c.executemany('INSERT INTO weather VALUES (?,?,?,?,?,?,?)', data)
     print("data added sucessfully")
     conn.commit_and_close()
