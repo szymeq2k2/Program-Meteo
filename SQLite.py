@@ -8,7 +8,7 @@ def connect():
     return conn
 
 def create_cursor(conn):
-    c = conn.curson()
+    c = conn.cursor()
     return c
 
 def commit_and_close(conn):
@@ -20,10 +20,9 @@ def commit_and_close(conn):
 def add_Data(data):
     conn = connect()
     c = create_cursor(conn)
-    create_table(conn)
     c.executemany('INSERT INTO weather VALUES (?,?,?,?,?,?,?)', data)
-    print("data added sucessfully")
-    conn.commit_and_close()
+    print("data added sucessfully"+"\n")
+    commit_and_close(conn)
 
 
 
@@ -31,8 +30,7 @@ def add_Data(data):
     
 def create_table(conn):
     c = create_cursor(conn)
-    c.execute('''CREATE TABLE weather IF NOT EXIST
-             (date text, temp real, temp_avg real , temp_min real, temp_max real , humidity real , wind_speed real)''')
+    c.execute('''CREATE TABLE weather(date text, temp real, temp_avg real , temp_min real, temp_max real , humidity real , wind_speed real)''')
 
 
 def max_min_avg(date):
@@ -59,4 +57,4 @@ def max_min_avg(date):
     if min=="":
         return "no data for inputed date"
     else:
-        return "temp min = "+min+"\n"+"temp max = "+max+"\n"+"avg = "+str(avgFromAll)
+        return "temp min = "+min+"\n"+"temp max = "+max+"\n"+"avg = "+str(avgFromAll)+"\n"

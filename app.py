@@ -120,19 +120,21 @@ def start():
     end=False
     print('In order to see all commands input "help"')
     while end == False:
-        choice = input()
+        choice = input("Input: ")
         if choice == "help":
-            print("\n"+"help - displays all commands."+"\n"+"temp - display min max temperature from selected day and avg temp from all data"+"\n"+"add - adds data from today to database"+"\n"+"show - shows data on diagrams "+"\n"+"quit - closes the aplication"+"\n")
+            print("\n"+"help - displays all commands."+"\n"+"temp - display min max temperature from selected day and avg temp from all data"+"\n"+"today - display values in console from today"+"\n"+"add - adds data from today to database"+"\n"+"show - shows data on diagrams "+"\n"+"quit - closes the aplication"+"\n")
         elif choice == "temp":
             print("Input date like this 2020-07-21")
             date = input()
-            max_min_avg(date)
+            print(max_min_avg(date))
         elif choice == "add":
             add_Data(weatherNow)
         elif choice == "show":
             if __name__ == '__main__':
                 webbrowser.open('http://127.0.0.1:8050/')
                 app.run_server()
+        elif choice == "today":
+            print("temp = "+str(json_data['main']['temp'])+"\n"+"temp min = "+str(json_data['main']['temp_min'])+"\n"+"temp max = "+str(json_data['main']['temp_max'])+"\n"+"humidity = "+str(json_data['main']['humidity'])+"\n"+"wind = "+str(json_data['wind']['speed'])+"\n")
         elif choice == "quit":
             end=True
 
