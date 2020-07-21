@@ -124,7 +124,7 @@ def start():
         if choice == "help":
             print("\n"+"help - displays all commands."+"\n"+"temp - display min max temperature from selected day and avg temp from all data"+"\n"+"today - display values in console from today"+"\n"+"add - adds data from today to database"+"\n"+"show - shows data on diagrams "+"\n"+"quit - closes the aplication"+"\n")
         elif choice == "temp":
-            print("Input date like this 2020-07-21")
+            print("Input date like this 2020-07-21-09:01")
             date = input()
             print(max_min_avg(date))
         elif choice == "add":
@@ -138,7 +138,8 @@ def start():
         elif choice == "quit":
             end=True
 
-x = datetime.date.today()
+x = datetime.datetime.today().strftime('%Y-%m-%d-%H:%M')
+# print(x)
 json_data = currentData()
 json_data_for = forecastData()
 avg =(json_data['main']['temp_min']+json_data['main']['temp_max'])/2
