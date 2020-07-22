@@ -32,14 +32,13 @@ def currentData():
 def get_dates(days_pass):
     date_today = datetime.datetime.today()
     date1 = date_today + timedelta(days = days_pass)
-    return date1.strftime('%Y-%m-%d-%H:%M')
-
+    # return date1.strftime('%Y-%m-%d-%H:%M')
+    return date1.strftime('%A')
 
 #creating_dash_board creates a dashboard
 def creating_dash_board(json_data,json_data_for):
     external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
     app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
-
 
     data = {'temp': json_data['main']['temp'], 'feels like': json_data['main']['feels_like'], 'temp min': json_data['main']['temp_min'], 'temp max':json_data['main']['temp_max'] }
     names = list(data.keys())
@@ -53,8 +52,9 @@ def creating_dash_board(json_data,json_data_for):
 
     values=[json_data_for['list'][0]['main']['temp'],json_data_for['list'][1]['main']['temp'],json_data_for['list'][2]['main']['temp'],json_data_for['list'][3]['main']['temp'],json_data_for['list'][4]['main']['temp']]
     names=[get_dates(1),get_dates(2),get_dates(3),get_dates(4),get_dates(5)]
-    df4 =pd.DataFrame({"Date":names,"°C":values})
-    fig4 = px.line(df4,x="Date",y="°C")
+    # df4 =pd.DataFrame({"Date":names,"°C":values})
+    df4 =pd.DataFrame({"Day":names,"°C":values})
+    fig4 = px.line(df4,x="Day",y="°C")
 
     colors = {
         'background': '#111111',
