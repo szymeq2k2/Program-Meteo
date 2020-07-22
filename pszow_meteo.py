@@ -12,29 +12,30 @@ import re
 import dash
 from meteo_db import max_min_avg
 from meteo_db import add_Data
+from datetime import timedelta
 
-# forecastData returns forecast data it requested in json data type
+# forecastData returns forecast data
 def forecastData():
     request_for = requests.get("http://api.openweathermap.org/data/2.5/forecast?lat=50.040003&lon=18.394399&APPID=7cf51f9cd2de7b8e469a6e0ea1bf986c&units=metric")
     for_weather = request_for.content.strip()
     data_for = json.loads(for_weather)
     return data_for
 
-# forecastData returns current data it requested in json data type
+# forecastData returns current data
 def currentData():
     request_loc = requests.get("http://api.openweathermap.org/data/2.5/weather?lat=50.040003&lon=18.394399&APPID=7cf51f9cd2de7b8e469a6e0ea1bf986c&units=metric")
     loc_weather = request_loc.content.strip()
     data = json.loads(loc_weather)
     return data
 
+#get_dates returns date after days_pass days passed 
+def get_dates(days_pass):
+    date_today = datetime.datetime.today()
+    date1 = date_today + timedelta(days = days_pass)
+    return date1.strftime('%Y-%m-%d-%H:%M')
 
 
-
-
-
-
-
-#creating_dash_board creates a dashboard with 4 diagrams
+#creating_dash_board creates a dashboard
 def creating_dash_board(json_data,json_data_for):
     external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
     app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
@@ -43,23 +44,17 @@ def creating_dash_board(json_data,json_data_for):
     data = {'temp': json_data['main']['temp'], 'feels like': json_data['main']['feels_like'], 'temp min': json_data['main']['temp_min'], 'temp max':json_data['main']['temp_max'] }
     names = list(data.keys())
     values = list(data.values())
-    df1 = pd.DataFrame({"Type": names,"C": values})
-    fig1 = px.bar(df1, x="Type",y="C" ,barmode="group")
+    df1 = pd.DataFrame({"Type": names,"°C": values})
+    fig1 = px.bar(df1, x="Type",y="°C" ,barmode="group")
 
-    values=[json_data['wind']['speed'],json_data['wind']['speed']]
-    names = ["speed","gust"]
-    df2 =pd.DataFrame({"x":names,"y":values})
-    fig2 = px.bar(df2,x="x",y="y",barmode="group")
-
-    values=[json_data['main']['humidity']]
-    names=["humidity"]
-    df3 =pd.DataFrame({"x":names,"y":values})
-    fig3 = px.bar(df3,x="x",y="y",barmode="group")
+    wind_speed='Wind speed = '+str(json_data['wind']['speed'])+'km/h'
+    wind_gust='Wind gust = '+str(json_data['wind']['speed'])+'km/h'
+    humidity_value='Humidity level = '+str(json_data['main']['humidity'])+'%'
 
     values=[json_data_for['list'][0]['main']['temp'],json_data_for['list'][1]['main']['temp'],json_data_for['list'][2]['main']['temp'],json_data_for['list'][3]['main']['temp'],json_data_for['list'][4]['main']['temp']]
-    names=[1,2,3,4,5]
-    df4 =pd.DataFrame({"x":names,"y":values})
-    fig4 = px.line(df4,x="x",y="y")
+    names=[get_dates(1),get_dates(2),get_dates(3),get_dates(4),get_dates(5)]
+    df4 =pd.DataFrame({"Date":names,"°C":values})
+    fig4 = px.line(df4,x="Date",y="°C")
 
     colors = {
         'background': '#111111',
@@ -88,10 +83,11 @@ def creating_dash_board(json_data,json_data_for):
             'color': colors['text']
         }
         ),
-
-        dcc.Graph(
-            id='wind',
-            figure=fig2
+        html.H2(
+        children=wind_speed
+        ),
+        html.H2(
+        children=wind_gust
         ),
 
         html.H1(
@@ -101,10 +97,8 @@ def creating_dash_board(json_data,json_data_for):
             'color': colors['text']
         }
         ),
-
-        dcc.Graph(
-            id='humid',
-            figure=fig3
+        html.H2(
+        children=humidity_value
         ),
 
         html.H1(
