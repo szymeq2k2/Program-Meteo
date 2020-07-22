@@ -31,7 +31,7 @@ Program used to display and register data from externally weather data source. D
 - temp - display min max temperature from selected day and avg temp from all data.
 - today - display values in console from today.
 - add - adds data from today to database.
-- show - shows data on diagrams.
+- show - shows data on diagrams (show -d to enable dark mode).
 - quit - closes the aplication.
 
 ## Status:
