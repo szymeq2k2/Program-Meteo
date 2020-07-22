@@ -25,11 +25,12 @@ Instruction:
 Program used to display and register data from externally weather data source. Data is recorded to local database. In program you can use a few command, it's:
 
 help - displays all commands.
+
 temp - display min max temperature from selected day and avg temp from all data.
+
 today - display values in console from today.
 
 add - adds data from today to database.
-
 show - shows data on diagrams.
 quit - closes the aplication.
 
