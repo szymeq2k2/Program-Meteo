@@ -27,7 +27,9 @@ Program used to display and register data from externally weather data source. D
 help - displays all commands.
 temp - display min max temperature from selected day and avg temp from all data.
 today - display values in console from today.
+
 add - adds data from today to database.
+
 show - shows data on diagrams.
 quit - closes the aplication.
 
