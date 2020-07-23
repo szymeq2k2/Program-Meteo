@@ -204,7 +204,7 @@ def create_dash_layout_night(fig1,fig4,wind_gust,wind_speed,humidity_value,app):
             id='future',
             figure=fig4 ,
         )
-    
+        
     ])
     return app.layout
 #its a start funcion
