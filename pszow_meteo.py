@@ -207,7 +207,7 @@ def create_dash_layout_night(fig1,fig4,wind_gust,wind_speed,humidity_value,app):
     
     ])
     return app.layout
-
+#its a start funcion
 def start():
     end=False
     print('In order to see all commands input "help"')
@@ -219,6 +219,8 @@ def start():
             print("Input date like this 2020-07-21-09:01")
             date = input()
             print(max_min_avg(date))
+        # elif choice=="show":
+                
         elif choice == "add":
             add_Data(weatherNow)
         elif choice == "show":
