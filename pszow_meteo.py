@@ -52,8 +52,8 @@ def creating_dash_board(json_data,json_data_for,dark):
                                     'plot_bgcolor': colors['graph-bg-dark']
                                     })
 
-    wind_speed='Wind speed = '+str(json_data['wind']['speed'])+'km/h'
-    wind_gust='Wind gust = '+str(json_data['wind']['speed'])+'km/h'
+    wind_speed= str(json_data['wind']['speed'])+'km/h'
+    wind_gust= str(json_data['wind']['speed'])+'km/h'
     humidity_value='Humidity level = '+str(json_data['main']['humidity'])+'%'
 
     values=[json_data_for['list'][1]['main']['temp'],json_data_for['list'][2]['main']['temp'],json_data_for['list'][3]['main']['temp'],json_data_for['list'][4]['main']['temp'],json_data_for['list'][5]['main']['temp']]
@@ -162,19 +162,26 @@ def create_dash_layout_night(fig1,fig4,wind_gust,wind_speed,humidity_value,app):
             'color': colors['text-dark']
         }
         ),
-        html.H2(
-        children=wind_speed ,
-        style={
-            'textAlign': 'center',
-            'color': colors['text-dark']
-        }
+        html.Div(style={'backgroundColor': colors['tiles-color-night'] ,'height': 100 ,'width': 100},children=[
+            html.H3(
+            children=wind_speed ,
+            style={
+                'textAlign': 'center',
+                'color': colors['text-dark']
+            }
+            )
+        ]
         ),
-        html.H2(
-        children=wind_gust ,
-        style={
-            'textAlign': 'center',
-            'color': colors['text-dark']
-        }
+        html.Div(style={'backgroundColor': colors['tiles-color-night']},children=[
+            html.H2(
+            children=wind_gust ,
+            style={
+                'textAlign': 'center',
+                'color': colors['text-dark']
+            }
+            )
+        ]
+        
         ),
 
         html.H1(
@@ -242,7 +249,9 @@ colors = {
     'background': '#1a1a1a',
     'text': '#7FDBFF',
     'text-dark': '#00EA64',
-    'graph-bg-dark': '#6E6E6E'
+    'graph-bg-dark': '#6E6E6E',
+    'tiles-color-day': '#a1acc2',
+    'tiles-color-night': '#7f8899'
  }
 
 x = datetime.datetime.today().strftime('%Y-%m-%d-%H:%M')
