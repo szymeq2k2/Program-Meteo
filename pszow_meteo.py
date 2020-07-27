@@ -53,10 +53,13 @@ def creating_dash_board(json_data, json_data_for, dark):
     names = list(data.keys())
     values = list(data.values())
     df1 = pd.DataFrame({"Type": names, "°C": values})
-    fig1_day = px.bar(df1, x="Type", y="°C", barmode="group")
-    fig1_night = px.bar(df1, x="Type", y="°C", barmode="group", color_discrete_sequence=['darkblue']*3).update_layout({
+    fig1_day = px.bar(df1, x="Type", y="°C", barmode="group", title="Temperature today").update_layout({
+                                    'title_font_color': colors['text']
+                                    })
+    fig1_night = px.bar(df1, x="Type", y="°C", barmode="group", title="Temperature today", color_discrete_sequence=['darkblue']*3).update_layout({
                                     'paper_bgcolor': colors['background'],
-                                    'plot_bgcolor': colors['graph-bg-dark']
+                                    'plot_bgcolor': colors['graph-bg-dark'],
+                                    'title_font_color': colors['text-dark']                                    
                                     })
 
     wind_speed = str(json_data['wind']['speed'])+'km/h'
@@ -66,10 +69,13 @@ def creating_dash_board(json_data, json_data_for, dark):
     values = [json_data_for['list'][1]['main']['temp'], json_data_for['list'][2]['main']['temp'], json_data_for['list'][3]['main']['temp'], json_data_for['list'][4]['main']['temp'], json_data_for['list'][5]['main']['temp']]
     names = [get_dates(1), get_dates(2), get_dates(3), get_dates(4), get_dates(5)]
     df4 = pd.DataFrame({"Day": names, "°C": values})
-    fig4_day = px.line(df4, x="Day", y="°C")
-    fig4_night = px.line(df4, x="Day", y="°C", color_discrete_sequence=['darkblue']*3).update_layout({
+    fig4_day = px.line(df4, x="Day", y="°C", title="Temperature in the future").update_layout({
+                                    'title_font_color': colors['text']
+                                    })
+    fig4_night = px.line(df4, x="Day", y="°C", title="Temperature in the future", color_discrete_sequence=['darkblue']*3).update_layout({
                                     'paper_bgcolor': colors['background'],
-                                    'plot_bgcolor': colors['graph-bg-dark']
+                                    'plot_bgcolor': colors['graph-bg-dark'],
+                                    'title_font_color': colors['text-dark']
                                     })
 
     if dark is True:
@@ -123,19 +129,15 @@ def create_card_night(title, value, description):
 
 # returns app with bright layout
 def create_dash_layout_day(fig1, fig4, wind_gust, wind_speed, humidity_value, app):
-    app.layout = html.Div(style={'width': '100%', }, children=[
-
-        html.H1(
-            children='Temperature today',
-            style={
-                'textAlign': 'center',
-                'color': colors['text']
-            }
-        ),
-
-        dcc.Graph(
-            id='temp',
-            figure=fig1
+    app.layout = html.Div(style={}, children=[
+        html.Div(children=[
+            dcc.Graph(
+                style={'height': '350px'},
+                id='temp',
+                figure=fig1
+            )
+        ],
+            style={'width': '80%', 'padding-left': '10%'}
         ),
         html.Div(children=[
             html.Table(children=[
@@ -148,21 +150,19 @@ def create_dash_layout_day(fig1, fig4, wind_gust, wind_speed, humidity_value, ap
             ]),
         ],
             style={
-                'padding-left': '10%',
-                'width': '80%'
+                'padding-left': '15%',
+                'width': '80%',
+                'height': '200px'
             }
         ),
-        html.H1(
-            children='Temperature in future',
-            style={
-                'textAlign': 'center',
-                'color': colors['text']
-            }
-        ),
-
-        dcc.Graph(
-            id='future',
-            figure=fig4
+        html.Div(children=[
+            dcc.Graph(
+                style={'height': '350px'},
+                id='future',
+                figure=fig4
+            )
+        ],
+            style={'width': '80%', 'padding-left': '10%'}
         )
 
     ])
@@ -172,17 +172,14 @@ def create_dash_layout_day(fig1, fig4, wind_gust, wind_speed, humidity_value, ap
 # returns app with dark layout
 def create_dash_layout_night(fig1, fig4, wind_gust, wind_speed, humidity_value, app):
     app.layout = html.Div(style={'width': '100%', 'backgroundColor': colors['background']}, children=[
-        html.H1(
-            children='Temperature today',
-            style={
-                'textAlign': 'center',
-                'color': colors['text-dark']
-            }
-        ),
-
-        dcc.Graph(
-            id='temp',
-            figure=fig1
+        html.Div(children=[
+            dcc.Graph(
+                style={'height': '350px'},
+                id='temp',
+                figure=fig1
+            )
+        ],
+            style={'width': '80%', 'padding-left': '10%'}
         ),
         html.Div(children=[
             html.Table(children=[
@@ -195,24 +192,20 @@ def create_dash_layout_night(fig1, fig4, wind_gust, wind_speed, humidity_value, 
             ]),
         ],
             style={
-                'padding-left': '10%',
-                'width': '80%'
+                'padding-left': '15%',
+                'width': '80%',
+                'height': '200px'
             }
         ),
-
-        html.H1(
-            children='Temperature in future',
-            style={
-                'textAlign': 'center',
-                'color': colors['text-dark']
-            }
-        ),
-
-        dcc.Graph(
-            id='future',
-            figure=fig4
+        html.Div(children=[
+            dcc.Graph(
+                style={'height': '350px'},
+                id='future',
+                figure=fig4
+            )
+        ],
+            style={'width': '80%', 'padding-left': '10%'}
         )
-
     ])
     return app.layout
 
