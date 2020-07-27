@@ -27,6 +27,7 @@ def forecastData():
     data_for = json.loads(for_weather)
     return data_for
 
+
 # forecastData returns current data
 def currentData():
     request_loc = requests.get("http://api.openweathermap.org/data/2.5/weather?lat=50.040003&lon=18.394399&APPID=7cf51f9cd2de7b8e469a6e0ea1bf986c&units=metric")
@@ -34,156 +35,187 @@ def currentData():
     data = json.loads(loc_weather)
     return data
 
-#get_dates returns date after days_pass days passed 
+
+# get_dates returns date after days_pass days passed
 def get_dates(days_pass):
     date_today = datetime.datetime.today()
-    date1 = date_today + timedelta(days = days_pass)
+    date1 = date_today + timedelta(days=days_pass)
     return date1.strftime('%A')
 
-#creating_dash_board creates a dashboard
-def creating_dash_board(json_data,json_data_for,dark):
+
+# creating_dash_board creates a dashboard
+def creating_dash_board(json_data, json_data_for, dark):
 
     external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
     app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
     app.css.append_css({'external_url': 'reset.css'})
-    data = {'temp': json_data['main']['temp'], 'feels like': json_data['main']['feels_like'], 'temp min': json_data['main']['temp_min'], 'temp max':json_data['main']['temp_max'] }
+    data = {'temp': json_data['main']['temp'], 'feels like': json_data['main']['feels_like'], 'temp min': json_data['main']['temp_min'], 'temp max': json_data['main']['temp_max']}
     names = list(data.keys())
     values = list(data.values())
-    df1 = pd.DataFrame({"Type": names,"°C": values})
-    fig1_day = px.bar(df1, x="Type",y="°C" ,barmode="group")
-    fig1_night = px.bar(df1, x="Type",y="°C" ,barmode="group",color_discrete_sequence =['darkblue']*3).update_layout({
+    df1 = pd.DataFrame({"Type": names, "°C": values})
+    fig1_day = px.bar(df1, x="Type", y="°C", barmode="group")
+    fig1_night = px.bar(df1, x="Type", y="°C", barmode="group", color_discrete_sequence=['darkblue']*3).update_layout({
                                     'paper_bgcolor': colors['background'],
                                     'plot_bgcolor': colors['graph-bg-dark']
                                     })
 
-    wind_speed= str(json_data['wind']['speed'])+'km/h'
-    wind_gust= str(json_data['wind']['speed'])+'km/h'
-    humidity_value=str(json_data['main']['humidity'])+'%'
+    wind_speed = str(json_data['wind']['speed'])+'km/h'
+    wind_gust = str(json_data['wind']['speed'])+'km/h'
+    humidity_value = str(json_data['main']['humidity'])+'%'
 
-    values=[json_data_for['list'][1]['main']['temp'],json_data_for['list'][2]['main']['temp'],json_data_for['list'][3]['main']['temp'],json_data_for['list'][4]['main']['temp'],json_data_for['list'][5]['main']['temp']]
-    names=[get_dates(1),get_dates(2),get_dates(3),get_dates(4),get_dates(5)]
-    df4 =pd.DataFrame({"Day":names,"°C":values})
-    fig4_day = px.line(df4,x="Day",y="°C")
-    fig4_night = px.line(df4,x="Day",y="°C",color_discrete_sequence =['darkblue']*3).update_layout({
+    values = [json_data_for['list'][1]['main']['temp'], json_data_for['list'][2]['main']['temp'], json_data_for['list'][3]['main']['temp'], json_data_for['list'][4]['main']['temp'], json_data_for['list'][5]['main']['temp']]
+    names = [get_dates(1), get_dates(2), get_dates(3), get_dates(4), get_dates(5)]
+    df4 = pd.DataFrame({"Day": names, "°C": values})
+    fig4_day = px.line(df4, x="Day", y="°C")
+    fig4_night = px.line(df4, x="Day", y="°C", color_discrete_sequence=['darkblue']*3).update_layout({
                                     'paper_bgcolor': colors['background'],
                                     'plot_bgcolor': colors['graph-bg-dark']
                                     })
-                                    
-    if dark==True:
-        app.layout = create_dash_layout_night(fig1_night,fig4_night,wind_gust,wind_speed,humidity_value,app)
+
+    if dark is True:
+        app.layout = create_dash_layout_night(fig1_night, fig4_night, wind_gust, wind_speed, humidity_value, app)
     else:
-        app.layout = create_dash_layout_day(fig1_day,fig4_day,wind_gust,wind_speed,humidity_value,app)
+        app.layout = create_dash_layout_day(fig1_day, fig4_day, wind_gust, wind_speed, humidity_value, app)
     return app
 
+
 # returns card
-def create_card_day(title,value,description):
+def create_card_day(title, value, description):
     card = dbc.Card([
         dbc.CardBody(
             [
                 html.H4(title),
-                html.H2(        
-                children=value,
-                style={
-                    'textAlign': 'center',
-                }),
+                html.H2(
+                    children=value,
+                    style={
+                        'textAlign': 'center',
+                    }),
                 html.P(description)
             ]
         )
-    
+
     ],
-    style={'width': '15%' , 'backgroundColor':colors['tiles-color-day']},
-    )
-    return card
-# returns card
-def create_card_night(title,value,description):
-    card = dbc.Card([
-        dbc.CardBody(
-            [
-                html.H4(title),
-                html.H2(        
-                children=value,
-                style={
-                    'textAlign': 'center',
-                }),
-                html.P(description)
-            ]
-        )
-    
-    ],
-    style={'width': '15%' , 'backgroundColor':colors['tiles-color-night']},
+        style={'width': '100%', 'backgroundColor': colors['tiles-color-day']},
     )
     return card
 
-#returns app with bright layout
-def create_dash_layout_day(fig1,fig4,wind_gust,wind_speed,humidity_value,app):
-    app.layout = html.Div(children=[
+
+# returns card
+def create_card_night(title, value, description):
+    card = dbc.Card([
+        dbc.CardBody(
+            [
+                html.H4(title),
+                html.H2(
+                    children=value,
+                    style={
+                        'textAlign': 'center',
+                    }),
+                html.P(description)
+            ]
+        )
+
+    ],
+        style={'width': '100%', 'backgroundColor': colors['tiles-color-night']},
+    )
+    return card
+
+
+# returns app with bright layout
+def create_dash_layout_day(fig1, fig4, wind_gust, wind_speed, humidity_value, app):
+    app.layout = html.Div(style={'width': '100%', }, children=[
 
         html.H1(
-        children='Temperature today ',
-        style={
-            'textAlign': 'center',
-            'color': colors['text']
-        }
+            children='Temperature today',
+            style={
+                'textAlign': 'center',
+                'color': colors['text']
+            }
         ),
 
         dcc.Graph(
             id='temp',
             figure=fig1
         ),
-        dbc.Row([
-        dbc.Col([create_card_day("wind speed",wind_speed,"this is wind speed from today")]), dbc.Col([create_card_day("Wind gust",wind_gust,"this is wind gust from today")]), dbc.Col([create_card_day("Humidity",humidity_value,"this is humidity level from today")])
-        ]),
-
+        html.Div(children=[
+            html.Table(children=[
+                html.Tr(children=[
+                    html.Th([create_card_day("wind speed", wind_speed, "this is wind speed from today")], style={'width': '20%'}),
+                    html.Th([create_card_day("Wind gust", wind_gust, "this is wind gust from today")], style={'width': '20%'}),
+                    html.Th([create_card_day("Humidity", humidity_value, "this is humidity level from today")], style={'width': '20%'})
+                ],
+                )
+            ]),
+        ],
+            style={
+                'padding-left': '10%',
+                'width': '80%'
+            }
+        ),
         html.H1(
-        children='Temperature in future ',
-        style={
-            'textAlign': 'center',
-            'color': colors['text']
-        }
+            children='Temperature in future',
+            style={
+                'textAlign': 'center',
+                'color': colors['text']
+            }
         ),
 
         dcc.Graph(
             id='future',
             figure=fig4
         )
-    
+
     ])
     return app.layout
 
-#returns app with dark layout
-def create_dash_layout_night(fig1,fig4,wind_gust,wind_speed,humidity_value,app):
-    app.layout = html.Div(style={'backgroundColor': colors['background']},children=[
+
+# returns app with dark layout
+def create_dash_layout_night(fig1, fig4, wind_gust, wind_speed, humidity_value, app):
+    app.layout = html.Div(style={'width': '100%', 'backgroundColor': colors['background']}, children=[
         html.H1(
-        children='Temperature today ',
-        style={
-            'textAlign': 'center',
-            'color': colors['text-dark']
-        }
+            children='Temperature today',
+            style={
+                'textAlign': 'center',
+                'color': colors['text-dark']
+            }
         ),
 
         dcc.Graph(
             id='temp',
-            figure=fig1 ,
+            figure=fig1
         ),
-        dbc.Row([
-        dbc.Col([create_card_night("wind speed",wind_speed,"this is wind speed from today")]), dbc.Col([create_card_night("Wind gust",wind_gust,"this is wind gust from today")]), dbc.Col([create_card_night("Humidity",humidity_value,"this is humidity level from today")])
-        ]),
+        html.Div(children=[
+            html.Table(children=[
+                html.Tr(children=[
+                    html.Th([create_card_day("wind speed", wind_speed, "this is wind speed from today")], style={'width': '20%'}),
+                    html.Th([create_card_day("Wind gust", wind_gust, "this is wind gust from today")], style={'width': '20%'}),
+                    html.Th([create_card_day("Humidity", humidity_value, "this is humidity level from today")], style={'width': '20%'})
+                ],
+                )
+            ]),
+        ],
+            style={
+                'padding-left': '10%',
+                'width': '80%'
+            }
+        ),
 
         html.H1(
-        children='Temperature in future ',
-        style={
-            'textAlign': 'center',
-            'color': colors['text-dark']
-        }
+            children='Temperature in future',
+            style={
+                'textAlign': 'center',
+                'color': colors['text-dark']
+            }
         ),
 
         dcc.Graph(
             id='future',
-            figure=fig4 ,
+            figure=fig4
         )
-        
+
     ])
     return app.layout
+
 
 # returns parsed arguments
 def arguments_get():
@@ -194,33 +226,32 @@ def arguments_get():
     if len(sys.argv) < 2:
         print('You need to specify argument')
         sys.exit()
-
-    if sys.argv[2] =="-d":
-        if sys.argv[1]!="show":
-            print("You cant use -d with that")
-            sys.exit()
-    elif sys.argv[2] =="--dark":
-        if sys.argv[1]!="show":
-            print("You cant use -d with that")
-            sys.exit()
+    if len(sys.argv) == 3:
+        if sys.argv[2] == "-d":
+            if sys.argv[1] != "show":
+                print("You cant use -d with that")
+                sys.exit()
+        elif sys.argv[2] == "--dark":
+            if sys.argv[1] != "show":
+                print("You cant use -d with that")
+                sys.exit()
     command_parser = argparse.ArgumentParser(description='')
     command_parser.add_argument('Command',
-                        metavar='command',
-                        type=str)
+                                metavar='command',
+                                type=str)
     command_parser.add_argument('-d',
                                 '--dark',
                                 action='store_true',
                                 help='enable the dark mode')
     args = command_parser.parse_args()
-    arguments_parsed=[args.Command,args.dark]
+    arguments_parsed = [args.Command, args.dark]
     return arguments_parsed
 
 
-
-#its a start funcion
+# its a new start funcion
 def start():
-    arguments=arguments_get()
-    choice =  arguments[0]
+    arguments = arguments_get()
+    choice = arguments[0]
     dark = arguments[1]
     if choice == "temp":
         print("Input date like this 2020-07-21-09:01")
@@ -230,12 +261,11 @@ def start():
         add_Data(weatherNow)
     elif choice == "show":
         if __name__ == '__main__':
-            app=creating_dash_board(json_data,json_data_for,dark)
+            app = creating_dash_board(json_data, json_data_for, dark)
             webbrowser.open('http://127.0.0.1:8050/')
             app.run_server()
     elif choice == "today":
         print("temp = "+str(json_data['main']['temp'])+"\n"+"temp min = "+str(json_data['main']['temp_min'])+"\n"+"temp max = "+str(json_data['main']['temp_max'])+"\n"+"humidity = "+str(json_data['main']['humidity'])+"\n"+"wind = "+str(json_data['wind']['speed'])+"\n")
-
 
 colors = {
     'background': '#1a1a1a',
@@ -246,12 +276,8 @@ colors = {
     'tiles-color-night': '#7f8899'
 }
 x = datetime.datetime.today().strftime('%Y-%m-%d-%H:%M')
-# print(x)
 json_data = currentData()
 json_data_for = forecastData()
-avg =(json_data['main']['temp_min']+json_data['main']['temp_max'])/2
-weatherNow =[(str(x),json_data['main']['temp'],avg,json_data['main']['temp_min'],json_data['main']['temp_max'],json_data['main']['humidity'],json_data['wind']['speed'])]
-
+avg = (json_data['main']['temp_min']+json_data['main']['temp_max'])/2
+weatherNow = [(str(x), json_data['main']['temp'], avg, json_data['main']['temp_min'], json_data['main']['temp_max'], json_data['main']['humidity'], json_data['wind']['speed'])]
 start()
-
-
