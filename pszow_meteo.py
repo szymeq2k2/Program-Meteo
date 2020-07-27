@@ -195,8 +195,14 @@ def arguments_get():
         print('You need to specify argument')
         sys.exit()
 
-    
-
+    if sys.argv[2] =="-d":
+        if sys.argv[1]!="show":
+            print("You cant use -d with that")
+            sys.exit()
+    elif sys.argv[2] =="--dark":
+        if sys.argv[1]!="show":
+            print("You cant use -d with that")
+            sys.exit()
     command_parser = argparse.ArgumentParser(description='')
     command_parser.add_argument('Command',
                         metavar='command',
